@@ -1,0 +1,64 @@
+# Introduction
+
+This repository contains instructions and necessary files to set up and run an instance of Shoutrrr, Watchtower, and Grafana on a Raspberry Pi using Docker. Shoutrrr is a service for sending notifications to various instant messaging platforms like Discord and Slack, while Watchtower is a service for monitoring and automatically updating Docker containers. Grafana is used for visualizing and analyzing the vital statistics of the Raspberry Pi.
+
+## Prerequisites
+
+Before proceeding with the installation and deployment of services, ensure that Docker is installed on your Raspberry Pi. If Docker is not installed, follow the official Docker [installation guide](https://docs.docker.com/engine/install/raspberry-pi-os/) available on the Docker website.
+
+Additionally, you need to generate tokens for Telegram and/or Slack bots and configure any other necessary endpoints for notifications.
+
+## Installation Instructions
+
+Clone the repository onto your Raspberry Pi:
+
+```bash
+git clone <repository_URL>
+```
+
+Navigate to the project directory:
+
+```bash
+cd <project_folder_name>
+```
+
+Copy the `.env.example` file to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Populate the `.env` file with your configurations:
+generate a key for `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN`:
+
+```bash
+openssl rand --hex 32
+```
+
+This key can also be used to generate the password for `DOCKER_INFLUXDB_INIT_PASSWORD`.
+
+Launch the service using Docker Compose:
+```bash
+docker-compose up -d
+```
+
+## Grafana Configuration
+
+After launching the services, you can configure Grafana to visualize the data from InfluxDB.
+
+1. Access Grafana by navigating to `http://<raspberry_pi_ip>:3000` in your web browser. Log in using the default credentials (`admin/admin`).
+
+2. Click on "Add data source" and choose "InfluxDB".
+
+3. Configure the InfluxDB data source with the following details:
+   - **URL:** `http://influxdb:8086`
+   - **Token:** `<your InfluxDB admin token>`
+   - **Organization:** `<organization>`
+   - **Bucket:** `telegraf`
+
+4. Save the data source.
+
+5. Now you can import and customize dashboards to visualize your Raspberry Pi's vital statistics.
+Navigate to the folder `grafana/dashboards` within your project repository.
+
+7. Locate the JSON file containing the dashboard you wish to import.

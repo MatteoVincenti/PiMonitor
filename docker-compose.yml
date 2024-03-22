@@ -1,0 +1,75 @@
+services:
+  telegraf:
+    image: telegraf:alpine
+    container_name: telegraf
+    restart: unless-stopped
+    hostname: telegraf 
+    env_file:
+      - .env
+    volumes:
+      - /:/hostfs:ro 
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - skynet
+
+  influxdb:
+    image: influxdb:alpine
+    container_name: influxdb
+    restart: unless-stopped
+    hostname: influxdb
+    env_file:
+      - .env
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    ports:
+      - ${INFLUXDB_PORT}:8086
+    networks:
+      - skynet
+  
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    hostname: grafana
+    depends_on:
+      - influxdb
+      - telegraf
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - skynet
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    hostname: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - portainer-data:/data
+    ports:
+      - 8000:8000
+      - 9443:9443
+      - 9000:9000
+    networks:
+      - skynet
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    hostname: watchtower
+    env_file:
+      - .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    
+volumes:
+  influxdb-data:
+  grafana-data:
+  portainer-data:
+
+networks:
+  skynet:
