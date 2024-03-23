@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Configuration
+MAX_ATTEMPTS=3
+ATTEMPT_COUNTER=0
+CHECK_INTERVAL=5 # Interval between checks in seconds
+PING_TARGET="8.8.8.8"
+
+# Function to check Internet connectivity
+check_internet() {
+    ping -c 1 -W 2 "$PING_TARGET" > /dev/null 2>&1
+    return $?
+}
+
+# Main logic
+while [ $ATTEMPT_COUNTER -lt $MAX_ATTEMPTS ]; do
+    if check_internet; then
+        echo "Internet connection detected."
+        exit 0
+    else
+        ATTEMPT_COUNTER=$((ATTEMPT_COUNTER + 1))
+        echo "Attempt $ATTEMPT_COUNTER of $MAX_ATTEMPTS failed."
+        sleep $CHECK_INTERVAL
+    fi
+done
+
+echo "Internet connection not available after $MAX_ATTEMPTS attempts. Restarting the system..."
+sudo touch /forcefsck
+sudo reboot
