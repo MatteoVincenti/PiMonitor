@@ -1,0 +1,180 @@
+services:
+  telegraf:
+    image: telegraf:alpine
+    container_name: telegraf
+    restart: unless-stopped
+    hostname: telegraf
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
+    env_file:
+      - .env
+    volumes:
+      - /:/hostfs:ro
+      - ./configs/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - skynet
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    hostname: prometheus
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
+    depends_on:
+      - telegraf
+    volumes:
+      - ./configs/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - ${PROMETHEUS_PORT:-9090}:9090
+    networks:
+      - skynet
+
+  influxdb:
+    image: influxdb:alpine
+    container_name: influxdb
+    restart: unless-stopped
+    hostname: influxdb
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
+    depends_on:
+      - telegraf
+    env_file:
+      - .env
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    ports:
+      - ${INFLUXDB_PORT:-8086}:8086
+    networks:
+      - skynet
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    hostname: loki
+    ports:
+      - ${LOKI_PORT:-3100}:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - skynet
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    restart: unless-stopped
+    hostname: alloy
+    env_file:
+      - .env
+    volumes:
+      - ./configs/config.alloy:/etc/alloy/config.alloy
+    ports:
+      - ${ALLOY_PORT:-12345}:12345
+    command: > 
+      run --server.http.listen-addr=0.0.0.0:${ALLOY_PORT:-12345}
+      --storage.path=/var/lib/alloy/data
+      /etc/alloy/config.alloy
+    networks:
+      - skynet
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    hostname: grafana
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
+    entrypoint: 
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+
+        cat <<EOF > /etc/grafana/provisioning/datasources/influxdb.yaml
+        apiVersion: 1
+        deleteDatasources:
+          - name: InfluxDB
+            orgId: 1
+        datasources:
+          - name: InfluxDB
+            type: influxdb
+            access: proxy
+            url: http://${INFLUXDB_HOST:-influxdb}:${INFLUXDB_PORT:-8086}
+            isDefault: true
+            jsonData:
+              version: Flux
+              organization: ${DOCKER_INFLUXDB_INIT_ORG}
+              defaultBucket: ${DOCKER_INFLUXDB_INIT_BUCKET}
+              httpMode: POST
+            secureJsonData:
+              token: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+            editable: false
+            version: 1
+        EOF
+
+        cat <<EOF > /etc/grafana/provisioning/datasources/loki.yaml
+        apiVersion: 1
+        deleteDatasources:
+          - name: Loki
+            orgId: 1
+        datasources:
+          - name: Loki
+            type: loki
+            access: proxy
+            orgId: 1
+            url: http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}
+            basicAuth: false
+            isDefault: false
+            editable: false
+            version: 1
+        EOF
+
+        cat <<EOF > /etc/grafana/provisioning/datasources/prometheus.yaml
+        apiVersion: 1
+        deleteDatasources:
+          - name: Prometheus
+            orgId: 1
+        datasources:
+          - name: Prometheus
+            type: prometheus
+            access: proxy
+            url: http://${PROMETHEUS_HOST:-prometheus}:${PROMETHEUS_PORT:-9090}
+            isDefault: false
+            jsonData:
+              tlsSkipVerify: false
+              httpMode: POST
+            editable: false
+            version: 1
+        EOF
+        
+        /run.sh
+    depends_on:
+      - influxdb
+      - telegraf
+      - prometheus
+    env_file:
+      - .env
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - ${GRAFANA_PORT:-3000}:3000
+    networks:
+      - skynet
+
+volumes:
+  influxdb-data:
+  grafana-data:
+  prometheus-data:
+
+networks:
+  skynet:
+    driver: bridge
