@@ -2,6 +2,8 @@
 
 This repository contains instructions and necessary files to set up and run an instance of Shoutrrr, Watchtower, and Grafana on a Raspberry Pi using Docker. Shoutrrr is a service for sending notifications to various instant messaging platforms like Discord and Slack, while Watchtower is a service for monitoring and automatically updating Docker containers. Grafana is used for visualizing and analyzing the vital statistics of the Raspberry Pi.
 
+By Matteo Vincenti
+
 ## Prerequisites
 
 Before proceeding with the installation and deployment of services, ensure that Docker is installed on your Raspberry Pi. If Docker is not installed, follow the official Docker [installation guide](https://docs.docker.com/engine/install/raspberry-pi-os/) available on the Docker website.
