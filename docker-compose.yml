@@ -1,3 +1,5 @@
+name: pi-monitor
+
 services:
   telegraf:
     image: telegraf:alpine
@@ -65,7 +67,6 @@ services:
       - .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 3600
 
 volumes:
   influxdb-data:
