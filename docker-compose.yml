@@ -3,7 +3,7 @@ name: pi-monitor
 services:
   telegraf:
     image: telegraf:alpine
-    container_name: telegraf
+    container_name: pi.telegraf
     restart: unless-stopped
     hostname: telegraf
     env_file:
@@ -16,7 +16,7 @@ services:
 
   influxdb:
     image: influxdb:alpine
-    container_name: influxdb
+    container_name: pi.influxdb
     restart: unless-stopped
     hostname: influxdb
     env_file:
@@ -30,7 +30,7 @@ services:
 
   grafana:
     image: grafana/grafana-oss:latest
-    container_name: grafana
+    container_name: pi.grafana
     restart: unless-stopped
     hostname: grafana
     depends_on:
@@ -55,8 +55,6 @@ services:
       - 8000:8000
       - 9443:9443
       - 9000:9000
-    networks:
-      - skynet
 
   watchtower:
     image: containrrr/watchtower
