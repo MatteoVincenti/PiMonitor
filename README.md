@@ -64,3 +64,31 @@ After launching the services, you can configure Grafana to visualize the data fr
 Navigate to the folder `grafana/dashboards` within your project repository.
 
 7. Locate the JSON file containing the dashboard you wish to import.
+
+## Watchtower Configuration and Run
+
+In the `.env` file, you can copy, paste and edit the following configurations or create your own by following the [documentation](https://containrrr.dev/watchtower/arguments/):
+
+```ini
+WATCHTOWER_NOTIFICATION_URL="discord://token@channel"
+WATCHTOWER_CLEANUP=true
+WATCHTOWER_REMOVE_VOLUMES=true
+WATCHTOWER_INCLUDE_STOPPED=true
+WATCHTOWER_NO_STARTUP_MESSAGE=false
+```
+
+To start the container run
+
+```bash
+docker compose -f watchtower.yml up -d
+```
+
+## Portainer Up and Running
+
+To start the container run
+
+```bash
+docker compose -f portainer.yml up -d
+```
+
+Now you can go to `https://localhost:9443` and set follow the initial setup.

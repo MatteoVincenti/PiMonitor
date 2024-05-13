@@ -1,7 +1,7 @@
 services:
   telegraf:
     image: telegraf:alpine
-    container_name: pi-monitor.telegraf
+    container_name: host.telegraf
     restart: unless-stopped
     hostname: telegraf
     env_file:
@@ -14,7 +14,7 @@ services:
 
   influxdb:
     image: influxdb:alpine
-    container_name: pi-monitor.influxdb
+    container_name: host.influxdb
     restart: unless-stopped
     hostname: influxdb
     env_file:
@@ -28,7 +28,7 @@ services:
 
   grafana:
     image: grafana/grafana-oss:latest
-    container_name: pi-monitor.grafana
+    container_name: host.grafana
     restart: unless-stopped
     hostname: grafana
     depends_on:
@@ -41,33 +41,9 @@ services:
     networks:
       - skynet
 
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: pi-monitor.portainer
-    restart: unless-stopped
-    hostname: portainer
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer-data:/data
-    ports:
-      - 8000:8000
-      - 9000:9000
-      - 9443:9443
-
-  watchtower:
-    image: containrrr/watchtower
-    container_name: pi-monitor.watchtower
-    restart: unless-stopped
-    hostname: watchtower
-    env_file:
-      - .env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
 volumes:
   influxdb-data:
   grafana-data:
-  portainer-data:
 
 networks:
   skynet:
