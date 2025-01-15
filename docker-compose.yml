@@ -17,6 +17,8 @@ services:
     container_name: host.influxdb
     restart: unless-stopped
     hostname: influxdb
+    depends_on:
+      - telegraf
     env_file:
       - .env
     volumes:
