@@ -3,7 +3,7 @@
 # Function to start services with multiple compose files
 start_services() {
   compose_files=("$@")
-  docker-compose "${compose_files[@]}" up -d
+  docker compose "${compose_files[@]}" up -d
 }
 
 # Main script logic

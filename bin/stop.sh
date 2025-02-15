@@ -10,7 +10,7 @@ stop_service_if_running() {
   service_name=$1
   compose_file=$2
   if is_service_running "$service_name"; then
-    docker-compose -f "$compose_file" down
+    docker compose -f "$compose_file" down
   else
     echo "$service_name is not running."
   fi
