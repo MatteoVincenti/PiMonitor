@@ -61,7 +61,8 @@ After launching the services, you can configure Grafana to visualize the data fr
 4. Save the data source.
 
 5. Now you can import and customize dashboards to visualize your Raspberry Pi's vital statistics.
-Navigate to the folder `grafana/dashboards` within your project repository.
+
+6. Navigate to the folder `grafana/dashboards` within your project repository.
 
 7. Locate the JSON file containing the dashboard you wish to import.
 
@@ -80,7 +81,7 @@ WATCHTOWER_NO_STARTUP_MESSAGE=false
 To start the container run
 
 ```bash
-docker compose -f watchtower.yml up -d
+docker compose -f docker-compose.watchtower.yml up -d
 ```
 
 ## Portainer Up and Running
@@ -88,7 +89,31 @@ docker compose -f watchtower.yml up -d
 To start the container run
 
 ```bash
-docker compose -f portainer.yml up -d
+docker compose -f docker-compose.portainer.yml up -d
 ```
 
-Now you can go to `https://localhost:9443` and set follow the initial setup.
+Now you can go to `https://localhost:9443` and follow the initial setup.
+
+## Homarr Configuration and Run
+
+To start the container run
+
+```bash
+docker compose -f docker-compose.homarr.yml up -d
+```
+
+## Start and Stop Scripts
+
+You can use the provided scripts to start and stop the services:
+
+To start the services:
+
+```bash
+./bin/start.sh
+```
+
+To stop the services:
+
+```bash
+./bin/stop.sh
+```
