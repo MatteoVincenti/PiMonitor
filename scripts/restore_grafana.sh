@@ -28,7 +28,7 @@ done
 
 # Ferma il container Grafana prima di ripristinare
 echo "Fermando il container di Grafana..."
-docker-compose stop grafana
+docker compose stop grafana
 
 # Ripristina il backup
 echo "Ripristinando il backup..."
@@ -37,6 +37,6 @@ docker run --rm -v grafana-data:/var/lib/grafana -v "$BACKUP_DIR":/backup alpine
 
 # Avvia nuovamente il container Grafana
 echo "Avviando il container di Grafana..."
-docker-compose start grafana
+docker compose start grafana
 
 echo "Ripristino completato."
