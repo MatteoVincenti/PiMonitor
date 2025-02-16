@@ -1,2 +1,5 @@
 .env
 homarr/appdata/*
+!homarr/appdata/.gitkeep
+certs/*
+!certs/.gitkeep

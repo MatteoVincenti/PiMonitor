@@ -1,14 +1,16 @@
 services:
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:2.21.5
     container_name: portainer
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
+      - ./certs/portainer:/certs:ro
     ports:
       - 8000:8000
       - 9443:9443
+    command: --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key
 
 volumes:
   portainer-data:

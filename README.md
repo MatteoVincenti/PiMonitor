@@ -39,9 +39,51 @@ openssl rand --hex 32
 
 This key can also be used to generate the password for `DOCKER_INFLUXDB_INIT_PASSWORD`.
 
-Launch the service using Docker Compose:
+Generate a key for `SECRET_ENCRYPTION_KEY` for Homarr:
+
 ```bash
-docker-compose up -d
+openssl rand --hex 32
+```
+
+## Starting Services
+
+You can use the provided script to start the services and generate the necessary certificates:
+
+```bash
+./scripts/start_services.sh
+```
+
+The script will prompt you to select which services to start and will generate the necessary certificates for the selected services.
+
+## Starting Services Independently
+
+If you want to start individual services, you can use the following commands:
+
+### Homarr
+
+To start Homarr, generate the necessary certificates and run:
+
+```bash
+./scripts/generate_certs.sh homarr
+docker compose -f docker-compose.homarr.yml up -d
+```
+
+### Portainer
+
+To start Portainer, generate the necessary certificates and run:
+
+```bash
+./scripts/generate_certs.sh portainer
+docker compose -f docker-compose.portainer.yml up -d
+```
+
+### Watchtower
+
+To start Watchtower, generate the necessary certificates and run:
+
+```bash
+./scripts/generate_certs.sh watchtower
+docker compose -f docker-compose.watchtower.yml up -d
 ```
 
 ## Grafana Configuration
@@ -109,11 +151,11 @@ You can use the provided scripts to start and stop the services:
 To start the services:
 
 ```bash
-./bin/start.sh
+./scripts/start_services.sh
 ```
 
 To stop the services:
 
 ```bash
-./bin/stop.sh
+./scripts/stop_services.sh
 ```

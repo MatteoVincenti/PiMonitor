@@ -16,6 +16,8 @@ prompt_service() {
   read -p "Do you want to include $service_name? (y/n): " choice
   if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
     compose_files+=(-f "$compose_file")
+    # Generate certificates using the generate_certs.sh script
+    bash "$(dirname "$0")/generate_certs.sh" "$service_name"
   fi
 }
 

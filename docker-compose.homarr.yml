@@ -6,6 +6,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./homarr/appdata:/appdata
+      - ./certs/homarr/homarr.crt:/appdata/trusted-certificates/homarr.crt:ro
+      - ./certs/homarr/homarr.key:/appdata/trusted-certificates/homarr.key:ro
     env_file:
       - .env
     ports:

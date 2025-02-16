@@ -23,6 +23,8 @@ services:
       - .env
     volumes:
       - influxdb-data:/var/lib/influxdb2
+      - ./certs/influxdb/influxdb.crt:/etc/ssl/certs/influxdb.crt:ro
+      - ./certs/influxdb/influxdb.key:/etc/ssl/private/influxdb.key:ro
     ports:
       - ${INFLUXDB_PORT}:8086
     networks:
@@ -38,6 +40,8 @@ services:
       - telegraf
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./certs/grafana/grafana.crt:/etc/ssl/certs/grafana.crt:ro
+      - ./certs/grafana/grafana.key:/etc/ssl/private/grafana.key:ro
     ports:
       - 3000:3000
     networks:
