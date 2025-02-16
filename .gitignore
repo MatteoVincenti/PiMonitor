@@ -1,2 +1,5 @@
-.env
-homarr/appdata/*
+.env                     // Ignore .env files
+homarr/appdata/*         // Ignore all files in homarr/appdata directory
+!homarr/appdata/.gitkeep // Except for homarr/appdata/.gitkeep
+grafana/backups/*        // Ignore all files in grafana/backups directory
+!grafana/backups/.gitkeep // Except for grafana/backups/.gitkeep
