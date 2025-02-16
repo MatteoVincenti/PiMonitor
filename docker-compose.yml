@@ -38,7 +38,7 @@ services:
       - telegraf
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./grafana/backup:/var/lib/grafana-backup:rw
+      - ./grafana/backups:/var/lib/grafana-backup:rw
     ports:
       - 3000:3000
     networks:
