@@ -26,7 +26,17 @@ select BACKUP_FILE in "${BACKUPS[@]}"; do
   fi
 done
 
+# Ferma il container Grafana prima di ripristinare
+echo "Fermando il container di Grafana..."
+docker-compose stop grafana
+
 # Ripristina il backup
-docker run --rm -v grafana-data:/var/lib/grafana -v "$BACKUP_DIR":/backup alpine tar xzvf /backup/$BACKUP_FILE -C /var/lib/grafana
+echo "Ripristinando il backup..."
+docker run --rm -v grafana-data:/var/lib/grafana -v "$BACKUP_DIR":/backup alpine \
+  tar xzvf /backup/$BACKUP_FILE -C /var/lib/grafana
+
+# Avvia nuovamente il container Grafana
+echo "Avviando il container di Grafana..."
+docker-compose start grafana
 
 echo "Ripristino completato."
