@@ -39,9 +39,20 @@ openssl rand --hex 32
 
 This key can also be used to generate the password for `DOCKER_INFLUXDB_INIT_PASSWORD`.
 
-Launch the service using Docker Compose:
+## Start and Stop Scripts
+
+You can use the provided scripts to start and stop the services:
+
+To start the services:
+
 ```bash
-docker-compose up -d
+./scripts/start.sh
+```
+
+To stop the services:
+
+```bash
+./scripts/stop.sh
 ```
 
 ## Grafana Configuration
@@ -96,24 +107,16 @@ Now you can go to `https://localhost:9443` and follow the initial setup.
 
 ## Homarr Configuration and Run
 
+Generate a token for Homarr:
+
+```bash
+openssl rand --hex 32
+```
+
+Add the generated token to the `.env` file under `SECRET_ENCRYPTION_KEY`.
+
 To start the container run
 
 ```bash
 docker compose -f docker-compose.homarr.yml up -d
-```
-
-## Start and Stop Scripts
-
-You can use the provided scripts to start and stop the services:
-
-To start the services:
-
-```bash
-./bin/start.sh
-```
-
-To stop the services:
-
-```bash
-./bin/stop.sh
 ```

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Determine the script's directory
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+PROJECT_ROOT=$(realpath "$SCRIPT_DIR/..")
+
 # Function to start services with multiple compose files
 start_services() {
   compose_files=("$@")
@@ -7,7 +11,7 @@ start_services() {
 }
 
 # Main script logic
-compose_files=(-f ../docker-compose.yml)
+compose_files=(-f "$PROJECT_ROOT/docker-compose.yml")
 
 # Function to prompt user for service selection
 prompt_service() {
@@ -21,9 +25,9 @@ prompt_service() {
 
 # Prompt user to select additional services to start
 echo "Select additional services to start:"
-prompt_service "homarr" "../docker-compose.homarr.yml"
-prompt_service "portainer" "../docker-compose.portainer.yml"
-prompt_service "watchtower" "../docker-compose.watchtower.yml"
+prompt_service "homarr" "$PROJECT_ROOT/docker-compose.homarr.yml"
+prompt_service "portainer" "$PROJECT_ROOT/docker-compose.portainer.yml"
+prompt_service "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yml"
 
 echo "Starting services with compose files: ${compose_files[*]}"
 start_services "${compose_files[@]}"

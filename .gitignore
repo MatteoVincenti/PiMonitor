@@ -1,2 +1,5 @@
 .env
 homarr/appdata/*
+!homarr/appdata/.gitkeep
+grafana/backups/*
+!grafana/backups/.gitkeep
