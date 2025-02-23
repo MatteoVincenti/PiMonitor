@@ -8,12 +8,14 @@ datasources:
   - name: InfluxDB
     type: influxdb
     access: proxy
-    url: http://${INFLUXDB_HOST}:${INFLUXDB_PORT}
+    url: http://influxdb:8086
     isDefault: true
     jsonData:
       version: Flux
-      organization: ${DOCKER_INFLUXDB_INIT_ORG}
-      defaultBucket: ${DOCKER_INFLUXDB_INIT_BUCKET}
+      organization: home
+      defaultBucket: telegraf
       httpMode: POST
     secureJsonData:
-      token: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+      token: 
+    editable: true
+    version: 1
