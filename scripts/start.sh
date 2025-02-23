@@ -11,7 +11,7 @@ start_services() {
 }
 
 # Main script logic
-compose_files=(-f "$PROJECT_ROOT/docker-compose.yml")
+compose_files=(-f "$PROJECT_ROOT/docker-compose.yaml")
 
 # Function to prompt user for service selection
 prompt_service() {
@@ -25,9 +25,9 @@ prompt_service() {
 
 # Prompt user to select additional services to start
 echo "Select additional services to start:"
-prompt_service "homarr" "$PROJECT_ROOT/docker-compose.homarr.yml"
-prompt_service "portainer" "$PROJECT_ROOT/docker-compose.portainer.yml"
-prompt_service "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yml"
+prompt_service "homarr" "$PROJECT_ROOT/docker-compose.homarr.yaml"
+prompt_service "portainer" "$PROJECT_ROOT/docker-compose.portainer.yaml"
+prompt_service "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yaml"
 
 echo "Starting services with compose files: ${compose_files[*]}"
 start_services "${compose_files[@]}"
