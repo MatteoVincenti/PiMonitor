@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eux
 
 # Determine the script's directory
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
@@ -26,6 +27,7 @@ echo "Stopping all services..."
 stop_service_if_running "host.telegraf" "$PROJECT_ROOT/docker-compose.yaml"
 stop_service_if_running "host.influxdb" "$PROJECT_ROOT/docker-compose.yaml"
 stop_service_if_running "host.grafana" "$PROJECT_ROOT/docker-compose.yaml"
+stop_service_if_running "host.prometheus" "$PROJECT_ROOT/docker-compose.yaml"
 stop_service_if_running "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yaml"
 stop_service_if_running "portainer" "$PROJECT_ROOT/docker-compose.portainer.yaml"
 stop_service_if_running "homarr" "$PROJECT_ROOT/docker-compose.homarr.yaml"
