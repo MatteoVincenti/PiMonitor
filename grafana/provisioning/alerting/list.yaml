@@ -84,8 +84,6 @@ groups:
           __dashboardUid__: edg269tnjme4gd
           __panelId__: "9"
         isPaused: false
-        notification_settings:
-          receiver: ItaloDiscord
       - uid: dedcsf88y9k3kc
         title: Memory Used Percent
         condition: C
@@ -164,8 +162,6 @@ groups:
           __dashboardUid__: edg269tnjme4gd
           __panelId__: "1"
         isPaused: false
-        notification_settings:
-          receiver: ItaloDiscord
       - uid: eedcstotsyl8ga
         title: Disk Used Percent
         condition: C
@@ -244,5 +240,3 @@ groups:
           __dashboardUid__: edg269tnjme4gd
           __panelId__: "4"
         isPaused: false
-        notification_settings:
-          receiver: ItaloDiscord
