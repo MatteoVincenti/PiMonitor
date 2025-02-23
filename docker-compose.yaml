@@ -12,6 +12,21 @@ services:
     networks:
       - skynet
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: host.prometheus
+    restart: unless-stopped
+    hostname: prometheus
+    depends_on:
+      - telegraf
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - 9090:9090
+    networks:
+      - skynet
+
   influxdb:
     image: influxdb:alpine
     container_name: host.influxdb
@@ -48,6 +63,7 @@ services:
 volumes:
   influxdb-data:
   grafana-data:
+  prometheus-data:
 
 networks:
   skynet:
