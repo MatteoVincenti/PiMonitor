@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Exit immediately on errors, treat unset variables as errors, and fail on any command in a pipeline.
+set -euo pipefail
+
+echo "Starting Docker cleanup..."
+
+# 1. Remove all unused data (containers, images, volumes, networks)
+#    - '--all' includes unused images not just 'dangling' ones.
+#    - '--volumes' includes unused volumes.
+docker system prune --all --volumes --force
+
+# 2. Prune individual object types (mostly redundant if you've already done system prune --all --volumes,
+#    but included here for clarity or to catch any corner cases).
+docker volume prune --all --force
+docker image prune --all --force
+docker network prune --force
+
+# 3. Prune Docker build cache (important for freeing up space on build layers).
+docker builder prune --all --force
+
+echo "Docker cleanup complete!"

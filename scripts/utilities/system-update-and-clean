@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Update package list and upgrade installed packages
+sudo apt update -y && sudo apt full-upgrade -y
+
+# Perform a distribution upgrade (handles changes in package dependencies)
+sudo apt dist-upgrade -y
+
+# Fix broken dependencies and install any missing packages
+sudo apt --fix-broken --fix-missing install -y
+
+# Remove unnecessary packages and their configuration files
+sudo apt autoremove --purge -y
+
+# Clean up the local repository of retrieved package files
+sudo apt autoclean -y
+sudo apt clean -y
+
+echo "System maintenance tasks completed successfully!"
