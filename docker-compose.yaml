@@ -1,0 +1,81 @@
+services:
+  telegraf:
+    image: telegraf:alpine
+    container_name: telegraf
+    restart: unless-stopped
+    hostname: telegraf
+    env_file:
+      - .env
+    volumes:
+      - /:/hostfs:ro
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - skynet
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    hostname: prometheus
+    depends_on:
+      - telegraf
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - ${PROMETHEUS_PORT:-9090}:9090
+    networks:
+      - skynet
+
+  influxdb:
+    image: influxdb:alpine
+    container_name: influxdb
+    restart: unless-stopped
+    hostname: influxdb
+    depends_on:
+      - telegraf
+    env_file:
+      - .env
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    ports:
+      - ${INFLUXDB_PORT:-8086}:8086
+    networks:
+      - skynet
+
+  grafana:
+    container_name: grafana
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+      args:
+        INFLUXDB_HOST: ${INFLUXDB_HOST:-influxdb}
+        INFLUXDB_PORT: ${INFLUXDB_PORT:-8086}
+        PROMETHEUS_HOST: ${PROMETHEUS_HOST:-prometheus}
+        PROMETHEUS_PORT: ${PROMETHEUS_PORT:-9090}
+        DOCKER_INFLUXDB_INIT_ORG: ${DOCKER_INFLUXDB_INIT_ORG}
+        DOCKER_INFLUXDB_INIT_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET}
+        DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+    restart: unless-stopped
+    hostname: grafana
+    depends_on:
+      - influxdb
+      - telegraf
+      - prometheus
+    env_file:
+      - .env
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - ${GRAFANA_PORT:-3000}:3000
+    networks:
+      - skynet
+
+volumes:
+  influxdb-data:
+  grafana-data:
+  prometheus-data:
+
+networks:
+  skynet:
+    driver: bridge

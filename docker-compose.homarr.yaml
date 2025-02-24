@@ -9,4 +9,4 @@ services:
     env_file:
       - .env
     ports:
-      - 7575:7575
+      - ${HOMARR_PORT:-7575}:7575

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Determine the script's directory
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
@@ -22,12 +23,10 @@ stop_service_if_running() {
 
 # Main script logic
 echo "Stopping all services..."
+docker compose -f $PROJECT_ROOT/docker-compose.yaml down
 
-stop_service_if_running "host.telegraf" "$PROJECT_ROOT/docker-compose.yml"
-stop_service_if_running "host.influxdb" "$PROJECT_ROOT/docker-compose.yml"
-stop_service_if_running "host.grafana" "$PROJECT_ROOT/docker-compose.yml"
-stop_service_if_running "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yml"
-stop_service_if_running "portainer" "$PROJECT_ROOT/docker-compose.portainer.yml"
-stop_service_if_running "homarr" "$PROJECT_ROOT/docker-compose.homarr.yml"
+stop_service_if_running "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yaml"
+stop_service_if_running "portainer" "$PROJECT_ROOT/docker-compose.portainer.yaml"
+stop_service_if_running "homarr" "$PROJECT_ROOT/docker-compose.homarr.yaml"
 
 echo "Shutdown complete."
