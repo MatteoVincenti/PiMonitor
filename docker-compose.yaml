@@ -44,6 +44,7 @@ services:
       - skynet
 
   grafana:
+    container_name: grafana
     build:
       context: ./grafana
       dockerfile: Dockerfile
@@ -55,7 +56,6 @@ services:
         DOCKER_INFLUXDB_INIT_ORG: ${DOCKER_INFLUXDB_INIT_ORG}
         DOCKER_INFLUXDB_INIT_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET}
         DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
-    container_name: grafana
     restart: unless-stopped
     hostname: grafana
     depends_on:
