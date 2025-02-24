@@ -47,6 +47,14 @@ services:
     build:
       context: ./grafana
       dockerfile: Dockerfile
+      args:
+        GRAFANA_DATASOURCE_INFLUXDB_NAME: ${GRAFANA_DATASOURCE_INFLUXDB_NAME}
+        GRAFANA_MAIN_FOLDER_NAME: ${GRAFANA_MAIN_FOLDER_NAME}
+        INFLUXDB_HOST: ${INFLUXDB_HOST}
+        INFLUXDB_PORT: ${INFLUXDB_PORT}
+        DOCKER_INFLUXDB_INIT_ORG: ${DOCKER_INFLUXDB_INIT_ORG}
+        DOCKER_INFLUXDB_INIT_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET}
+        DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
     container_name: grafana
     restart: unless-stopped
     hostname: grafana
