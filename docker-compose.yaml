@@ -55,10 +55,12 @@ services:
       - grafana-data:/var/lib/grafana
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/startup.sh:/startup.sh:ro
     ports:
       - 3000:3000
     networks:
       - skynet
+    command: ["/bin/sh", "/startup.sh"]
 
 volumes:
   influxdb-data:
