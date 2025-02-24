@@ -1,11 +1,11 @@
 apiVersion: 1
 
 deleteDatasources:
-  - name: ${GRAFANA_DATASOURCE_INFLUXDB_NAME}
+  - name: InfluxDB
     orgId: 1
 
 datasources:
-  - name: ${GRAFANA_DATASOURCE_INFLUXDB_NAME}
+  - name: InfluxDB
     type: influxdb
     access: proxy
     url: http://${INFLUXDB_HOST}:${INFLUXDB_PORT}
