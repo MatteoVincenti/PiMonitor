@@ -14,7 +14,7 @@ is_service_running() {
 stop_service_if_running() {
   service_name=$1
   compose_file=$2
-  if is_service_running "$service_name"; then
+  if is_service_running("$service_name"); then
     docker compose -f "$compose_file" down
   else
     echo "$service_name is not running."
@@ -23,7 +23,7 @@ stop_service_if_running() {
 
 # Main script logic
 echo "Stopping all services..."
-docker compose $PROJECT_ROOT/docker-compose.yaml down
+docker compose -f $PROJECT_ROOT/docker-compose.yaml down
 
 stop_service_if_running "watchtower" "$PROJECT_ROOT/docker-compose.watchtower.yaml"
 stop_service_if_running "portainer" "$PROJECT_ROOT/docker-compose.portainer.yaml"
