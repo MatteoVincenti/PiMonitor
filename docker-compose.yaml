@@ -23,7 +23,7 @@ services:
       - ./prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     ports:
-      - ${PROMETHEUS_PORT}:9090
+      - ${PROMETHEUS_PORT:-9090}:9090
     networks:
       - skynet
 
@@ -39,7 +39,7 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb2
     ports:
-      - ${INFLUXDB_PORT}:8086
+      - ${INFLUXDB_PORT:-8086}:8086
     networks:
       - skynet
 
@@ -49,10 +49,10 @@ services:
       context: ./grafana
       dockerfile: Dockerfile
       args:
-        INFLUXDB_HOST: ${INFLUXDB_HOST}
-        INFLUXDB_PORT: ${INFLUXDB_PORT}
-        PROMETHEUS_HOST: ${PROMETHEUS_HOST}
-        PROMETHEUS_PORT: ${PROMETHEUS_PORT}
+        INFLUXDB_HOST: ${INFLUXDB_HOST:-influxdb}
+        INFLUXDB_PORT: ${INFLUXDB_PORT:-8086}
+        PROMETHEUS_HOST: ${PROMETHEUS_HOST:-prometheus}
+        PROMETHEUS_PORT: ${PROMETHEUS_PORT:-9090}
         DOCKER_INFLUXDB_INIT_ORG: ${DOCKER_INFLUXDB_INIT_ORG}
         DOCKER_INFLUXDB_INIT_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET}
         DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
@@ -62,10 +62,12 @@ services:
       - influxdb
       - telegraf
       - prometheus
+    env_file:
+      - .env
     volumes:
       - grafana-data:/var/lib/grafana
     ports:
-      - 3000:3000
+      - ${GRAFANA_PORT:-3000}:3000
     networks:
       - skynet
 
