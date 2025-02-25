@@ -77,6 +77,10 @@ services:
     container_name: grafana
     restart: unless-stopped
     hostname: grafana
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
     entrypoint: 
       - sh
       - -euc

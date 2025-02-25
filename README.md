@@ -34,7 +34,7 @@ Follow these steps to install and configure PiMonitor:
     cd PiMonitor
     ```
 
-3.  **Configure Environment Variables:**
+3.  **Configure Environment Variables and install dependencies:**
     *   Copy the example environment configuration file to `.env`:
         ```bash
         cp .env.example .env
@@ -68,6 +68,11 @@ Follow these steps to install and configure PiMonitor:
 
         *   **Additional Configuration Options:** Consult the official documentation of each service (Grafana, InfluxDB, Prometheus, Telegraf, Homarr, Portainer, Watchtower, and any notification services) for detailed explanations of all available configuration parameters in `.env` and their impact. In particular, you might find Telegraf configuration options relevant if you want to customize the collected metrics.
 
+    *   Install the docker required plugins
+        ```bash
+        docker plugin install grafana/loki-docker-driver:3.3.2-arm64 --alias loki --grant-all-permissions
+        ```
+
 ## Start and Stop Scripts and Optional Service Selection
 
 The provided scripts have been improved to allow you to flexibly manage the startup of services, including the selection of optional services:
@@ -87,12 +92,6 @@ The provided scripts have been improved to allow you to flexibly manage the star
     This script executes `docker compose down` to gracefully stop and remove all containers. It does not offer a selection, but stops the entire PiMonitor system.
 
 *   **Other Utilities in `scripts` Folder**
-
-*   **Updating Grafana:**
-
-    ```bash
-    docker compose build --no-cache
-    ```
 
 ## Accessing Grafana and Importing Dashboards
 
