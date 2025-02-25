@@ -117,7 +117,7 @@ services:
               httpMode: POST
             secureJsonData:
               token: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
-            editable: true
+            editable: false
             version: 1
         EOF
 
@@ -152,7 +152,7 @@ services:
             jsonData:
               tlsSkipVerify: false
               httpMode: POST
-            editable: true
+            editable: false
             version: 1
         EOF
         
