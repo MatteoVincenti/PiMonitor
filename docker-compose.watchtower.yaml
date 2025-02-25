@@ -3,6 +3,11 @@ services:
     image: containrrr/watchtower
     container_name: watchtower
     restart: unless-stopped
+    hostname: watchtower
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
     env_file:
       - .env
     volumes:

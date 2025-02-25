@@ -4,11 +4,15 @@ services:
     container_name: telegraf
     restart: unless-stopped
     hostname: telegraf
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
     env_file:
       - .env
     volumes:
       - /:/hostfs:ro
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./configs/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     networks:
       - skynet
 
@@ -17,10 +21,14 @@ services:
     container_name: prometheus
     restart: unless-stopped
     hostname: prometheus
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
     depends_on:
       - telegraf
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./configs/prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     ports:
       - ${PROMETHEUS_PORT:-9090}:9090
@@ -32,6 +40,10 @@ services:
     container_name: influxdb
     restart: unless-stopped
     hostname: influxdb
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
     depends_on:
       - telegraf
     env_file:
@@ -62,7 +74,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./alloy/config.alloy:/etc/alloy/config.alloy
+      - ./configs/config.alloy:/etc/alloy/config.alloy
     ports:
       - ${ALLOY_PORT:-12345}:12345
     command: > 
@@ -86,7 +98,7 @@ services:
       - -euc
       - |
         mkdir -p /etc/grafana/provisioning/datasources
-        
+
         cat <<EOF > /etc/grafana/provisioning/datasources/influxdb.yaml
         apiVersion: 1
         deleteDatasources:
@@ -96,7 +108,7 @@ services:
           - name: InfluxDB
             type: influxdb
             access: proxy
-            url: http://${INFLUXDB_HOST}:${INFLUXDB_PORT}
+            url: http://${INFLUXDB_HOST:-influxdb}:${INFLUXDB_PORT:-8086}
             isDefault: true
             jsonData:
               version: Flux
@@ -119,7 +131,7 @@ services:
             type: loki
             access: proxy
             orgId: 1
-            url: http://${LOKI_HOST}:${LOKI_PORT}
+            url: http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}
             basicAuth: false
             isDefault: false
             editable: false
@@ -135,7 +147,7 @@ services:
           - name: Prometheus
             type: prometheus
             access: proxy
-            url: http://${PROMETHEUS_HOST}:${PROMETHEUS_PORT}
+            url: http://${PROMETHEUS_HOST:-prometheus}:${PROMETHEUS_PORT:-9090}
             isDefault: false
             jsonData:
               tlsSkipVerify: false

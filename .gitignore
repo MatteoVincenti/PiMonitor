@@ -1,3 +1,2 @@
 .env
-homarr/appdata/*
-!homarr/appdata/.gitkeep
+.DS_Store

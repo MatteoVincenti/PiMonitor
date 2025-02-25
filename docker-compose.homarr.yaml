@@ -3,10 +3,18 @@ services:
     image: ghcr.io/homarr-labs/homarr:latest
     container_name: homarr
     restart: unless-stopped
+    hostname: homarr
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_HOST:-loki}:${LOKI_PORT:-3100}/loki/api/v1/push"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./homarr/appdata:/appdata
+      - homarr-appdata:/appdata
     env_file:
       - .env
     ports:
       - ${HOMARR_PORT:-7575}:7575
+
+volumes:
+  homarr-appdata:
