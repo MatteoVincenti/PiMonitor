@@ -122,18 +122,16 @@ services:
         cat <<EOF > /etc/grafana/provisioning/datasources/prometheus.yaml
         apiVersion: 1
         deleteDatasources:
-          - name: Prometheus
-            orgId: 1
-        datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            orgId: 1
-            url: http://${LOKI_HOST}:${LOKI_PORT}
-            basicAuth: false
-            isDefault: true
-            version: 1
-            editable: false
+         - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://${PROMETHEUS_HOST}:${PROMETHEUS_PORT}
+          isDefault: false
+          jsonData:
+            tlsSkipVerify: false
+            httpMode: POST
+          editable: true
+          version: 1
         EOF
         /run.sh
     depends_on:
