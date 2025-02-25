@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
     hostname: loki
     ports:
-      - "${LOKI_PORT:-3100}:3100"
+      - ${LOKI_PORT:-3100}:3100
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - skynet
@@ -82,6 +82,7 @@ services:
       - -euc
       - |
         mkdir -p /etc/grafana/provisioning/datasources
+        
         cat <<EOF > /etc/grafana/provisioning/datasources/influxdb.yaml
         apiVersion: 1
         deleteDatasources:
@@ -103,6 +104,7 @@ services:
             editable: true
             version: 1
         EOF
+
         cat <<EOF > /etc/grafana/provisioning/datasources/loki.yaml
         apiVersion: 1
         deleteDatasources:
@@ -116,9 +118,10 @@ services:
             url: http://${LOKI_HOST}:${LOKI_PORT}
             basicAuth: false
             isDefault: false
-            version: 1
             editable: false
+            version: 1
         EOF
+
         cat <<EOF > /etc/grafana/provisioning/datasources/prometheus.yaml
         apiVersion: 1
         deleteDatasources:
@@ -136,6 +139,7 @@ services:
             editable: true
             version: 1
         EOF
+        
         /run.sh
     depends_on:
       - influxdb
