@@ -115,7 +115,7 @@ services:
             orgId: 1
             url: http://${LOKI_HOST}:${LOKI_PORT}
             basicAuth: false
-            isDefault: true
+            isDefault: false
             version: 1
             editable: false
         EOF
